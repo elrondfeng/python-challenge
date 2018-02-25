@@ -1,5 +1,6 @@
 import os
 import csv
+import sys
 from datetime import datetime
 from dateutil import relativedelta
 
@@ -23,6 +24,17 @@ def get_date(input):
         return datetime.strptime(input,'%b-%Y')
     else:
         return NotImplemented
+    
+class Logger(object):
+    def __init__(self, filename = os.path.join('raw_data','output.txt')):
+        self.terminal = sys.stdout
+        self.log = open(filename, "w")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+logger = Logger()
 
 with open(input_file_path, 'r', newline='') as csvfile:
 
@@ -62,19 +74,11 @@ with open(input_file_path, 'r', newline='') as csvfile:
 
 # print out the result
 
-print('\nFinancial Analysis\n----------------------------')
-print('Total Months : ' + str(total_month))
-print('Total Revenue : $' + str(total_revenue))
-print('Average Revenue Change: $' + str(total_change/total_month))
-print('Greatest Increase in Revenue: ' + str(max_increase_date) + '  ' + str(max_increase))
-print('Greatest Decrease in Revenue: ' + str(max_decrease_date) + '  ' + str(max_decrease))
+logger.write('\nFinancial Analysis\n----------------------------')
+logger.write('\nTotal Months : ' + str(total_month))
+logger.write('\nTotal Revenue : $' + str(total_revenue))
+logger.write('\nAverage Revenue Change: $' + str(total_change/total_month))
+logger.write('\nGreatest Increase in Revenue: ' + str(max_increase_date) + '  ' + str(max_increase))
+logger.write('\nGreatest Decrease in Revenue: ' + str(max_decrease_date) + '  ' + str(max_decrease))
 
-output_file_path = os.path.join('raw_data','result.txt')
 
-with open(output_file_path,'w') as text_file:
-    text_file.write('\nFinancial Analysis\n----------------------------')
-    text_file.write('\nTotal Months : ' + str(total_month))
-    text_file.write('\nTotal Revenue : $' + str(total_revenue))
-    text_file.write('\nAverage Revenue Change: $' + str(total_change/total_month))
-    text_file.write('Greatest Increase in Revenue: ' + str(max_increase_date) + '  ' + str(max_increase))
-    text_file.write('Greatest Decrease in Revenue: ' + str(max_decrease_date) + '  ' + str(max_decrease))
